@@ -7,7 +7,7 @@ object HmrcBuild extends Build {
   import BuildDependencies._
   import uk.gov.hmrc.DefaultBuildSettings._
 
-  val versionApp = "1.0.0"
+  val versionApp = "1.1.0-SNAPSHOT"
   val appName = "reference-checker"
 
   lazy val referenceChecker = (project in file("."))
