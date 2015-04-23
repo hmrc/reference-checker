@@ -16,7 +16,7 @@ object HmrcBuild extends Build {
       name := appName,
       targetJvm := "jvm-1.7",
       version := versionApp,
-      libraryDependencies ++= Seq(Test.scalaTest, Test.scalaCheck),
+      libraryDependencies ++= Seq(Test.scalaTest, Test.scalaCheck, Test.pegdown),
       crossScalaVersions := Seq("2.11.6"),
       ArtefactDescription()
     )
@@ -30,6 +30,8 @@ private object BuildDependencies {
   sealed abstract class Test(scope: String) {
     val scalaTest   = "org.scalatest" %% "scalatest" % "2.2.4" % scope
     val scalaCheck  = "org.scalacheck" %% "scalacheck" % "1.12.2" % scope
+    val pegdown = "org.pegdown" % "pegdown" % "1.5.0" % scope cross CrossVersion.Disabled
+
   }
 
   object Test extends Test("test")
