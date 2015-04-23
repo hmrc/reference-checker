@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/hmrc/reference-checker.svg)](https://travis-ci.org/hmrc/reference-checker)
+
 # Reference Checker
 
 Library to validate the tax references.
