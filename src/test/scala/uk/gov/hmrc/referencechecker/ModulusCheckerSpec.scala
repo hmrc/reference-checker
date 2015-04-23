@@ -1,3 +1,19 @@
+/*
+ * Copyright 2015 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package uk.gov.hmrc.referencechecker
 
 import org.scalacheck.Gen
@@ -31,6 +47,37 @@ class ModulusCheckerSpec extends WordSpecLike with Matchers with GeneratorDriven
         }.sum % 11
         val firstNumber: Int = remainderLookupTable(remainder)
         SelfAssessmentReferenceChecker.isValid(firstNumber + ints.mkString + "K") shouldBe true
+      }
+    }
+
+  }
+
+  "CT checksum validator" should {
+    val ValidReferences = Seq("1097172564", "2108834503", "2234567890")
+    val InvalidReferences = Seq("", "123456", "5550000621", "inv@lid123")
+
+
+    "return true for a valid reference" in {
+      checkAllValid(CorporationTaxReferenceChecker, ValidReferences)
+    }
+
+    "return false for an invalid reference" in {
+      checkAllInvalid(CorporationTaxReferenceChecker, InvalidReferences)
+    }
+
+
+    "return true for correctly generated references" in {
+      val checkSum = Gen.listOfN(9, Gen.chooseNum(0, 9))
+
+      val weights = List(6, 7, 8, 9, 10, 5, 4, 3, 2)
+      val remainderLookupTable = List(2, 1, 9, 8, 7, 6, 5, 4, 3, 2, 1)
+
+      forAll(checkSum) { (ints: Seq[Int]) =>
+        val remainder = (ints, weights).zipped.map {
+          case (s, i) => s * i
+        }.sum % 11
+        val firstNumber: Int = remainderLookupTable(remainder)
+        CorporationTaxReferenceChecker.isValid(firstNumber + ints.mkString) should be (true)
       }
     }
 
