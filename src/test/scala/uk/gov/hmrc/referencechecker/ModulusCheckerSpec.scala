@@ -24,7 +24,7 @@ class ModulusCheckerSpec extends WordSpecLike with Matchers with GeneratorDriven
 
   "The SA reference checker" should {
 
-    val ValidReferences = Seq("2234567890K", "2108834503K", "1097172564K")
+    val ValidReferences = Seq("2234567890K", "2108834503K", "1097172564K", "2234567890", "K2234567890", "1097172564k", "k1097172564")
     val InvalidReferences = Seq("", "123456", "1234567890K", "inv@lid123K", "inv@lid123K", "1nv@l-d~&*!", "1234567890E", "12345678905", "1097172564KZ")
 
     "return true for a valid reference" in {
