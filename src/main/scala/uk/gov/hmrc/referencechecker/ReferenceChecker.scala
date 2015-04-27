@@ -28,6 +28,7 @@ trait ReferenceChecker {
   def mainCheck(reference:String, weightedSum:Int): Boolean
 
   def referenceToValidate(reference:String): String = reference
+  def prepareReference(reference:String): String = reference
 
   implicit class StringImprovements(s: String) {
     def dropCharAtIndex(n: Int) = {
@@ -38,14 +39,15 @@ trait ReferenceChecker {
   }
 
   implicit class CharImprovements(digitOrLetter: Char) {
-    def toNumber(): Int = letterToNumber.getOrElse(digitOrLetter, digitOrLetter.asDigit)
+    def toNumber: Int = letterToNumber.getOrElse(digitOrLetter, digitOrLetter.asDigit)
   }
 
   def isValid(reference: String): Boolean = {
+    val preparedReference = prepareReference(reference.toUpperCase)
 
     val mainCheckResult = Try {
 
-      val refToValidate = referenceToValidate(reference)
+      val refToValidate = referenceToValidate(preparedReference)
 
       val weightedSum = weights.zipWithIndex.collect {
                           case (weight, index) if index < refToValidate.length => {
@@ -53,12 +55,12 @@ trait ReferenceChecker {
                           }
                         }.sum
 
-      mainCheck(reference, weightedSum)
+      mainCheck(preparedReference, weightedSum)
 
     } getOrElse false
 
     extraChecks.foldLeft(mainCheckResult) { (fullCondition, extraCheck) =>
-      fullCondition && extraCheck(reference.toUpperCase)
+      fullCondition && extraCheck(preparedReference.toUpperCase)
     }
 
   }
@@ -105,12 +107,16 @@ trait UtrReferenceChecker extends ModulusReferenceChecker {
 
   val weights = List(6, 7, 8, 9, 10, 5, 4, 3, 2)
   val letterToNumber = Map.empty[Char,Int]
-  val refRegex = """^\d{10}K?$"""
+  val refRegex = """^\d{10}$"""
 
   override def referenceToValidate(reference:String) = reference.tail
 }
 
-object SelfAssessmentReferenceChecker extends UtrReferenceChecker
+object SelfAssessmentReferenceChecker extends UtrReferenceChecker {
+  override def prepareReference(reference: String) = if (reference.startsWith("K")) reference.drop(1)
+                                                     else if (reference.endsWith("K")) reference.dropRight(1)
+                                                     else reference
+}
 
 object CorporationTaxReferenceChecker extends UtrReferenceChecker
 
