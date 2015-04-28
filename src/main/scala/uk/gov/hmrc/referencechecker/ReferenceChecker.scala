@@ -153,3 +153,14 @@ object SdltReferenceChecker extends LetterRemainderLookup {
       'L' -> 11, 'M' -> 12, 'N' -> 13, 'Y' -> 14, 'P' -> 15, 'Q' -> 16, 'R' -> 17, 'S' -> 18, 'T' -> 19, 'Z' -> 20, 'V' -> 21, 'W' -> 22)
   val refRegex = """^\d{9}M[A-Z]$"""
 }
+
+object P11DReferenceChecker extends LetterRemainderLookup {
+  val checkCharIndex = 4
+  val weights = List(9, 10, 11, 12, 0, 8, 7, 6, 5, 4, 3, 2, 1)
+  val letterToNumber = Map('A' -> 33, 'B' -> 34, 'C' -> 35, 'D' -> 36, 'E' -> 37, 'F' -> 38, 'G' -> 39, 'H' -> 40, 'J' -> 42, 'K' -> 43, 'L' -> 44, 'M' -> 45,
+    'N' -> 46, 'P' -> 48, 'Q' -> 49, 'R' -> 50, 'S' -> 51, 'T' -> 52, 'U' -> 56, 'V' -> 54, 'W' -> 55, 'X' -> 41, 'Y' -> 47, 'Z' -> 53)
+  val refRegex= """^\d{3}P[A-Z]\d{6}[A-Z_0-9]{2}$"""
+  override def extraChecks = super.extraChecks :+
+    ((ref:String) => if (ref.startsWith("961") && ref(12) == 'X') ref(5) == '0' else true) :+
+    ((ref:String) => if (ref.startsWith("961") && ref(12) != 'X') ref.matches( """^961P[A-Z]\d{8}$""") else true)
+}

@@ -31,4 +31,7 @@ The following list of checkers are available. Each checker returns `true` or `fa
 #### Other Taxes (ePAYE penalties, ePAYE settlement agreements, CIS penalties, and other references that start with 'X')
 
     OtherTaxReferenceChecker.isValid("XA012345678901")
- 
+
+#### P11D reference (Employers’ Class 1A National Insurance)
+
+    P11DReferenceChecker.isValid("123PW12345678")
