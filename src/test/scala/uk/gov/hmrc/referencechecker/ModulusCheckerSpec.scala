@@ -192,20 +192,6 @@ class ModulusCheckerSpec extends WordSpecLike with Matchers with GeneratorDriven
 
   }
 
-  "The P11D reference checker" should {
-
-    val ValidReferences = Seq("123PW12345678", "450PE00923437", "120PY19064375", "450PA0096437K", "853PW0076584X", "846PS00928342", "961PA0045782X", "961PF10305739", "123PH45678900")
-    val InvalidReferences = Seq("", "1234", "000PL00000000", "120PA12697495", "846PT00568772", "820PB0091254X", "961PI004578OQ", "123PW12345678Z", "8465L04697138", "120PW003179212324", "120PW0024", "123XH4!@£900", "961PA1145782X", "961PL004578FQ")
-
-    "return true for a valid reference" in {
-      checkAllValid(P11DReferenceChecker, ValidReferences)
-    }
-
-    "return false for an invalid reference" in {
-      checkAllInvalid(P11DReferenceChecker, InvalidReferences)
-    }
-  }
-
   def checkAllValid(checker: ReferenceChecker, refs: Seq[String]) = {
     val invalidRefs = refs.filterNot(checker.isValid)
 
