@@ -1,24 +1,22 @@
 import sbt.Keys._
 import sbt._
 import uk.gov.hmrc.SbtAutoBuildPlugin
+import uk.gov.hmrc.versioning.SbtGitVersioning
 
 object HmrcBuild extends Build {
 
   import BuildDependencies._
   import uk.gov.hmrc.DefaultBuildSettings._
 
-  val versionApp = "1.3.0-SNAPSHOT"
   val appName = "reference-checker"
 
   lazy val referenceChecker = (project in file("."))
-    .enablePlugins(SbtAutoBuildPlugin)
+    .enablePlugins(SbtAutoBuildPlugin, SbtGitVersioning)
     .settings(
       name := appName,
       targetJvm := "jvm-1.7",
-      version := versionApp,
       libraryDependencies ++= Seq(Test.scalaTest, Test.scalaCheck, Test.pegdown),
-      crossScalaVersions := Seq("2.11.6"),
-      ArtefactDescription()
+      crossScalaVersions := Seq("2.11.6")
     )
 }
 
@@ -36,22 +34,4 @@ private object BuildDependencies {
 
   object Test extends Test("test")
 
-}
-
-object ArtefactDescription {
-
-  def apply() = Seq(
-    pomExtra := (<url>https://www.gov.uk/government/organisations/hm-revenue-customs</url>
-      <licenses>
-        <license>
-          <name>Apache 2</name>
-          <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-        </license>
-      </licenses>
-      <scm>
-        <connection>scm:git@github.com:hmrc/reference-checker.git</connection>
-        <developerConnection>scm:git@github.com:hmrc/reference-checker.git</developerConnection>
-        <url>git@github.com:hmrc/reference-checker.git</url>
-      </scm>)
-    )
 }
