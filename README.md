@@ -34,3 +34,18 @@ This reference checker can be also used to validate P11D (Class 1A National Insu
 #### Other Taxes (ePAYE penalties, ePAYE settlement agreements, CIS penalties, and other references that start with 'X')
 
     OtherTaxReferenceChecker.isValid("XA012345678901")
+
+
+## Installing
+ 
+Include the following dependency in your SBT build
+ 
+``` scala
+resolvers += Resolver.bintrayRepo("hmrc", "releases")
+ 
+libraryDependencies += "uk.gov.hmrc" %% "reference-checker" % "x.x.x"
+```
+ 
+## License ##
+ 
+This code is open source software licensed under the [Apache 2.0 License]("http://www.apache.org/licenses/LICENSE-2.0.html").    
