@@ -5,33 +5,27 @@ import uk.gov.hmrc.versioning.SbtGitVersioning
 
 object HmrcBuild extends Build {
 
-  import BuildDependencies._
-  import uk.gov.hmrc.DefaultBuildSettings._
-
   val appName = "reference-checker"
 
-  lazy val referenceChecker = (project in file("."))
+  lazy val microservice = Project(appName, file("."))
     .enablePlugins(SbtAutoBuildPlugin, SbtGitVersioning)
     .settings(
-      name := appName,
-      targetJvm := "jvm-1.7",
-      libraryDependencies ++= Seq(Test.scalaTest, Test.scalaCheck, Test.pegdown),
-      crossScalaVersions := Seq("2.11.6")
+      scalaVersion := "2.11.7",
+      libraryDependencies ++= BuildDependencies(),
+      crossScalaVersions := Seq("2.11.7")
     )
+    .disablePlugins(sbt.plugins.JUnitXmlReportPlugin)
+
 }
 
 private object BuildDependencies {
 
-  object Compile {
-  }
+  lazy val testDeps = Seq(
+    "org.scalatest" %% "scalatest" % "2.2.4" % "test",
+    "org.scalacheck" %% "scalacheck" % "1.12.2" % "test",
+    "org.pegdown" % "pegdown" % "1.5.0" % "test"
+  )
 
-  sealed abstract class Test(scope: String) {
-    val scalaTest   = "org.scalatest" %% "scalatest" % "2.2.4" % scope
-    val scalaCheck  = "org.scalacheck" %% "scalacheck" % "1.12.2" % scope
-    val pegdown = "org.pegdown" % "pegdown" % "1.5.0" % scope cross CrossVersion.Disabled
-
-  }
-
-  object Test extends Test("test")
+  def apply() = testDeps
 
 }
