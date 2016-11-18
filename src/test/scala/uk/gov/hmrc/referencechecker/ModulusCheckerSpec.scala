@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 HM Revenue & Customs
+ * Copyright 2016 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,10 @@
 package uk.gov.hmrc.referencechecker
 
 import org.scalacheck.Gen
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
+import org.scalatest.prop.{GeneratorDrivenPropertyChecks, TableDrivenPropertyChecks, TableFor2}
 import org.scalatest.{Matchers, WordSpecLike}
 
-class ModulusCheckerSpec extends WordSpecLike with Matchers with GeneratorDrivenPropertyChecks {
+class ModulusCheckerSpec extends WordSpecLike with Matchers with GeneratorDrivenPropertyChecks with TableDrivenPropertyChecks {
 
   "The SA reference checker" should {
 
