@@ -19,13 +19,12 @@ package uk.gov.hmrc.referencechecker
 import org.scalatest.{Matchers, WordSpec}
 import org.scalatest.prop.TableDrivenPropertyChecks
 
-
-class P800ReferenceCheckerSpec extends WordSpec with TableDrivenPropertyChecks with Matchers {
+class SimpleAssessmentReferenceCheckerSpec extends WordSpec with TableDrivenPropertyChecks with Matchers {
 
   val invalidReferences = Table(
     ("Reference", "Problem"),
     ("", "is empty"),
-    ("SJ12312DP8002016", "has invalid NINO"),
+    ("SJ12312DP3022016", "has invalid NINO"),
     ("SJ123123D2016", "doesn't have P800"),
     ("SJ123123DP800", "doesn't have a year"),
     ("SJ123123DP800201g", "has invalid year")
