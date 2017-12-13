@@ -17,7 +17,6 @@ object HmrcBuild extends Build {
       libraryDependencies ++= BuildDependencies(),
       crossScalaVersions := Seq("2.11.11")
     )
-    .settings(publishingSettings: _*)
     .settings(SbtDistributablesPlugin.publishingSettings)
     .disablePlugins(sbt.plugins.JUnitXmlReportPlugin)
 
