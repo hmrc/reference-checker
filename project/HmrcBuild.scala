@@ -11,13 +11,12 @@ object HmrcBuild extends Build {
   lazy val plugins : Seq[Plugins] = Seq(play.sbt.PlayScala)
 
   lazy val microservice = Project(appName, file("."))
-    .enablePlugins(Seq(play.sbt.PlayScala,SbtAutoBuildPlugin, SbtDistributablesPlugin, SbtGitVersioning) ++ plugins : _*)
+    .enablePlugins(Seq(play.sbt.PlayScala,SbtAutoBuildPlugin, SbtGitVersioning) ++ plugins : _*)
     .settings(
       scalaVersion := "2.11.11",
       libraryDependencies ++= BuildDependencies(),
       crossScalaVersions := Seq("2.11.11")
     )
-    .settings(SbtDistributablesPlugin.publishingSettings)
     .disablePlugins(sbt.plugins.JUnitXmlReportPlugin)
 
 }
