@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ package uk.gov.hmrc.referencechecker
 import org.scalatest.{Matchers, WordSpec}
 import org.scalatest.prop.TableDrivenPropertyChecks
 
-
 class P800ReferenceCheckerSpec extends WordSpec with TableDrivenPropertyChecks with Matchers {
 
   val invalidReferences = Table(
@@ -35,7 +34,6 @@ class P800ReferenceCheckerSpec extends WordSpec with TableDrivenPropertyChecks w
     "return true for valid P800 reference string" in {
       P800ReferenceChecker.isValid("SJ123123DP8002016") shouldEqual true
     }
-
 
     forAll(invalidReferences) { (reference, problem) =>
       s"return false for string '$reference' that $problem" in {
