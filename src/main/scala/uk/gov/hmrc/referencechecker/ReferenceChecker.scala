@@ -145,6 +145,14 @@ object OtherTaxReferenceChecker extends LetterRemainderLookup {
   val refRegex = """^X[A-Z](([0-9A-Z]{13})|([0-9A-Z]\d{11}))$"""
 }
 
+object JRSReferenceChecker extends LetterRemainderLookup {
+  val checkCharIndex = 1
+  val weights = List(0, 0, 9, 10, 11, 12, 13, 8, 7, 6, 5, 4, 3, 2, 1)
+  val letterToNumber = Map('A' -> 33, 'B' -> 34, 'C' -> 35, 'D' -> 36, 'E' -> 37, 'F' -> 38, 'G' -> 39, 'H' -> 40, 'I' -> 41, 'J' -> 42, 'K' -> 43, 'L' -> 44, 'M' -> 45,
+    'N' -> 46, 'O' -> 47, 'P' -> 48, 'Q' -> 49, 'R' -> 50, 'S' -> 51, 'T' -> 52, 'U' -> 53, 'V' -> 54, 'W' -> 55, 'X' -> 56, 'Y' -> 57, 'Z' -> 58)
+  val refRegex = """[xX][a-zA-Z][jJ][rR][sS]\d{9}"""
+}
+
 object SdltReferenceChecker extends LetterRemainderLookup {
   val checkCharIndex = 10
   val weights = List(6, 7, 8, 9, 10, 5, 4, 3, 2)
