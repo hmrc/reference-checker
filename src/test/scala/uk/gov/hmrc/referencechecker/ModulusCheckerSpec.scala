@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,12 @@
 package uk.gov.hmrc.referencechecker
 
 import org.scalacheck.Gen
-import org.scalatest.prop.{GeneratorDrivenPropertyChecks, TableDrivenPropertyChecks}
-import org.scalatest.{Matchers, WordSpecLike}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.prop.TableDrivenPropertyChecks
+import org.scalatest.wordspec.AnyWordSpecLike
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
-class ModulusCheckerSpec extends WordSpecLike with Matchers with GeneratorDrivenPropertyChecks with TableDrivenPropertyChecks {
+class ModulusCheckerSpec extends AnyWordSpecLike with Matchers with ScalaCheckDrivenPropertyChecks with TableDrivenPropertyChecks {
 
   "The SA reference checker" should {
 
@@ -46,7 +48,7 @@ class ModulusCheckerSpec extends WordSpecLike with Matchers with GeneratorDriven
           case (s, i) => s * i
         }.sum % 11
         val firstNumber: Int = remainderLookupTable(remainder)
-        SelfAssessmentReferenceChecker.isValid(firstNumber + ints.mkString + "K") shouldBe true
+        SelfAssessmentReferenceChecker.isValid(firstNumber.toString + ints.mkString + "K") shouldBe true
       }
     }
 
@@ -75,7 +77,7 @@ class ModulusCheckerSpec extends WordSpecLike with Matchers with GeneratorDriven
           case (s, i) => s * i
         }.sum % 11
         val firstNumber: Int = remainderLookupTable(remainder)
-        CorporationTaxReferenceChecker.isValid(firstNumber + ints.mkString) should be (true)
+        CorporationTaxReferenceChecker.isValid(firstNumber.toString + ints.mkString) should be (true)
       }
     }
 

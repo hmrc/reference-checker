@@ -1,63 +1,60 @@
-import sbt.Keys._
-import sbt.{Compile, Def, EvictionWarningOptions, Project, Resolver, Test, file, _}
-import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
-import uk.gov.hmrc.versioning.SbtGitVersioning
-import uk.gov.hmrc.{SbtArtifactory, SbtAutoBuildPlugin, ShellPrompt, _}
+import sbt._
+import scoverage.ScoverageKeys
 import com.typesafe.sbt.SbtScalariform.ScalariformKeys
-import uk.gov.hmrc.DefaultBuildSettings.scalaSettings
 import scalariform.formatter.preferences._
+import uk.gov.hmrc.DefaultBuildSettings.scalaSettings
+import uk.gov.hmrc.DefaultBuildSettings.{defaultSettings, integrationTestSettings, scalaSettings}
 
 val appName = "reference-checker"
 
+lazy val scala213 = "2.13.8"
+lazy val scala212 = "2.12.16"
+lazy val supportedScalaVersions = List(scala213, scala212)
+
 lazy val referenceCheckerLib = Project(appName, file("."))
-  .enablePlugins(
-    SbtAutoBuildPlugin,
-    SbtGitVersioning,
-    SbtArtifactory
-  )
+  .enablePlugins(SbtAutoBuildPlugin, SbtGitVersioning)
+  .settings(scalaVersion := scala213)
   .settings(
     Seq(
       crossScalaVersions := supportedScalaVersions,
       majorVersion := 2,
       scalacOptions ++= scalaCompilerOptions,
-      resolvers ++= Seq(Resolver.bintrayRepo("hmrc", "releases"), Resolver.jcenterRepo),
-      evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
+      resolvers ++= Seq(Resolver.jcenterRepo),
+      update / evictionWarningOptions := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
       wartremoverExcluded ++= Seq(sourceManaged.value / "main" / "sbt-buildinfo" / "BuildInfo.scala"),
       scalariformSettings,
-      shellPrompt := ShellPrompt(version.value),
       buildInfoPackage := name.value.toLowerCase().replaceAllLiterally("-", "")
     ).++(wartRemoverError)
       .++(wartRemoverWarning)
-//      .++(Seq(
-//        wartremoverErrors in(Test, compile) --= Seq(Wart.Any, Wart.Equals, Wart.Null, Wart.NonUnitStatements, Wart.PublicInference)
-//      ))
       .++(scoverageSettings)
       .++(scalaSettings)
       .++(uk.gov.hmrc.DefaultBuildSettings.defaultSettings()): _ *
   )
   .settings(
     libraryDependencies ++= List(
-      "org.scalatest" %% "scalatest" % "3.0.0" % "test",
-      "org.scalacheck" %% "scalacheck" % "1.13.4" % "test",
-      "org.pegdown" % "pegdown" % "1.6.0" % "test"
-    )
+      "org.scalatest"        %% "scalatest"       % "3.2.15",
+      "org.scalatestplus"    %% "scalacheck-1-14" % "3.1.1.1",
+      "org.scalacheck"       %% "scalacheck"      % "1.15.2",
+      "org.pegdown"          %  "pegdown"         % "1.6.0",
+      "com.vladsch.flexmark" %  "flexmark-all"    % "0.62.2"
+    ).map(_ % Test)
+  )
+  .settings(
+    Compile / scalacOptions ++= {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, n)) if n <= 12 => List("-Yno-adapted-args", "-deprecation", "-Xfatal-warnings")
+        case _                       => List("-Ymacro-annotations", "-Wconf:cat=deprecation:ws")
+      }
+    }
   )
 
-lazy val scala212 = "2.12.12"
-lazy val scala211 = "2.11.11"
-lazy val supportedScalaVersions = List(scala212, scala211)
-
 val scalaCompilerOptions = Seq(
-  "-Xfatal-warnings",
   "-Xlint:-missing-interpolator,_",
-  "-Yno-adapted-args",
   "-Ywarn-value-discard",
   "-Ywarn-dead-code",
-  "-deprecation",
   "-feature",
   "-unchecked",
-  "-language:implicitConversions",
-  "-Ypartial-unification" //required by cats
+  "-language:implicitConversions"
 )
 
 lazy val scalariformSettings: Def.SettingsDefinition = {
@@ -95,7 +92,7 @@ lazy val scalariformSettings: Def.SettingsDefinition = {
 
 lazy val wartRemoverWarning = {
   val warningWarts = Seq()
-  wartremoverWarnings in(Compile, compile) ++= warningWarts
+  Compile / compile / wartremoverWarnings ++= warningWarts
 }
 
 
@@ -116,7 +113,6 @@ lazy val wartRemoverError = {
     Wart.OptionPartial,
     Wart.Recursion,
     Wart.Return,
-    Wart.TraversableOps,
     Wart.TryPartial,
     Wart.Var,
     Wart.While,
@@ -127,7 +123,7 @@ lazy val wartRemoverError = {
     Wart.IsInstanceOf,
     Wart.Any
   )
-  wartremoverErrors in(Compile, compile) ++= errorWarts
+  Compile / compile / wartremoverErrors ++= errorWarts
 }
 
 lazy val scoverageSettings = {
@@ -136,7 +132,7 @@ lazy val scoverageSettings = {
     // Semicolon-separated list of regexs matching classes to exclude
     ScoverageKeys.coverageExcludedPackages := "<empty>;.*BuildInfo.*;Reverse.*;app.Routes.*;prod.*;testOnlyDoNotUseInProd.*;manualdihealth.*;forms.*;config.*;",
     ScoverageKeys.coverageExcludedFiles := ".*microserviceGlobal.*;.*microserviceWiring.*;.*ApplicationLoader.*;.*ApplicationConfig.*;.*package.*;.*Routes.*;.*TestOnlyController.*;.*WebService.*",
-    ScoverageKeys.coverageMinimum := 80,
+    ScoverageKeys.coverageMinimumStmtTotal := 80,
     ScoverageKeys.coverageFailOnMinimum := false,
     ScoverageKeys.coverageHighlighting := true
   )
