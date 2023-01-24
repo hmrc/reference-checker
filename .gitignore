@@ -1,5 +1,6 @@
 *.class
 target
+**/target/*
 logs
 lib_managed
 pids
@@ -19,8 +20,6 @@ pids
 *.DS_Store
 **/*.DS_Store
 
-**/target/*
-target
 
 **/bin/*
 **/lib/*
@@ -36,3 +35,31 @@ nohup.out
 rebel.xml
 .history
 
+.*
+
+!.gitignore
+!.scalafmt.conf
+.cache
+/.classpath
+db
+dist
+.DS_Store
+eclipse
+*.eml
+/.idea_modules
+lib
+log
+modules
+/out
+precompiled
+/.project
+project/project
+project/target
+/RUNNING_PID
+server.pid
+/.settings
+.target
+test-result
+tmp
+.idea_modules
+bin

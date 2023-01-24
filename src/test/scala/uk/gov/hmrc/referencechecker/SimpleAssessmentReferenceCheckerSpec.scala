@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,13 @@
 
 package uk.gov.hmrc.referencechecker
 
-import org.scalatest.{Matchers, WordSpec}
-import org.scalatest.prop.TableDrivenPropertyChecks
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.prop.{TableDrivenPropertyChecks, TableFor2}
+import org.scalatest.wordspec.AnyWordSpec
 
-class SimpleAssessmentReferenceCheckerSpec extends WordSpec with TableDrivenPropertyChecks with Matchers {
+class SimpleAssessmentReferenceCheckerSpec extends AnyWordSpec with TableDrivenPropertyChecks with Matchers {
 
-  val invalidReferences = Table(
+  val invalidReferences: TableFor2[String, String] = Table(
     ("Reference", "Problem"),
     ("", "is empty"),
     ("SJ12312DP3022016", "has invalid NINO"),
